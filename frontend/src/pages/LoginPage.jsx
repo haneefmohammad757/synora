@@ -25,7 +25,6 @@ const LoginPage = () => {
           <span className="text-2xl font-bold tracking-tight">Synora</span>
         </Link>
         <h2 className="text-3xl font-bold">Sign in to your account</h2>
-        <p className="mt-2 text-sm text-textSecondary">Demo: demo@synora.ai / Synora123</p>
       </div>
       <div className="mx-auto w-full max-w-md animate-slide-up">
         <div className="glass-card">

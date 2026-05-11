@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import AIChatWidget from '../AIChatWidget';
 
 const DashboardLayout = () => (
   <div className="min-h-screen bg-background flex">
@@ -9,6 +10,7 @@ const DashboardLayout = () => (
         <Outlet />
       </div>
     </main>
+    <AIChatWidget />
   </div>
 );
 

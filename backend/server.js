@@ -29,6 +29,7 @@ app.use('/api/tasks', require('./routes/tasks.routes'));
 app.use('/api/analytics', require('./routes/analytics.routes'));
 app.use('/api/notes', require('./routes/notes.routes'));
 app.use('/api/focus', require('./routes/focus.routes'));
+app.use('/api/ai', require('./routes/ai.routes'));
 
 app.get('/', (req, res) => res.json({ message: 'Synora API is running ✅' }));
 
