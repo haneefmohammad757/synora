@@ -51,10 +51,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginDemo = async () => {
+    return login('demo@synora.ai', 'Synora123');
+  };
+
   const logout = () => { localStorage.removeItem('token'); setUser(null); };
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, login, signup, logout, setError }}>
+    <AuthContext.Provider value={{ user, loading, error, login, signup, logout, loginDemo, setError }}>
       {children}
     </AuthContext.Provider>
   );
