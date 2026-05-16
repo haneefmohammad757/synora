@@ -35,10 +35,10 @@ const AnalyticsPage = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 md:space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold mb-1">Analytics <span className="text-gradient">& Insights</span></h1>
-        <p className="text-textSecondary">Your real-time productivity data — tracked live from your activity.</p>
+        <h1 className="text-2xl md:text-3xl font-bold mb-1">Analytics <span className="text-gradient">& Insights</span></h1>
+        <p className="text-textSecondary text-sm md:text-base">Your real-time productivity data — tracked live from your activity.</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -55,7 +55,7 @@ const AnalyticsPage = () => {
         <div className="lg:col-span-2 glass-card p-6">
           <h3 className="text-lg font-bold mb-1">Tasks Completed — Last 7 Days</h3>
           <p className="text-xs text-textSecondary mb-6">{data.trend.reduce((a,b)=>a+b.completed,0)} total this week</p>
-          <div className="h-[240px] w-full">
+          <div className="h-[180px] md:h-[240px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.trend} barSize={28}>
                 <defs><linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6366f1"/><stop offset="100%" stopColor="#a855f7"/></linearGradient></defs>
@@ -71,7 +71,7 @@ const AnalyticsPage = () => {
         <div className="glass-card p-6">
           <h3 className="text-lg font-bold mb-1">Cumulative Trend</h3>
           <p className="text-xs text-textSecondary mb-6">Running total this week</p>
-          <div className="h-[240px] w-full">
+          <div className="h-[180px] md:h-[240px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data.trend.map((d,i)=>({...d,cumulative:data.trend.slice(0,i+1).reduce((a,b)=>a+b.completed,0)}))}>
                 <defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6366f1" stopOpacity={0.3}/><stop offset="100%" stopColor="#6366f1" stopOpacity={0}/></linearGradient></defs>
@@ -87,7 +87,7 @@ const AnalyticsPage = () => {
       </div>
 
       <div>
-        <h3 className="text-xl font-bold mb-4">AI-Generated Insights</h3>
+        <h3 className="text-lg md:text-xl font-bold mb-4">AI-Generated Insights</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {data.insights.length > 0 ? data.insights.map((insight, idx) => (
             <div key={idx} className="glass-card p-4 border border-primary/15 bg-primary/5 flex items-start gap-3">

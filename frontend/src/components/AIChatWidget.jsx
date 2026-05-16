@@ -18,7 +18,7 @@ const MessageBubble = ({ msg }) => (
       </div>
     )}
     <div
-      className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+      className={`max-w-[88%] md:max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
         msg.role === 'user'
           ? 'bg-primary text-white rounded-tr-sm shadow-lg shadow-primary/20'
           : 'bg-surface border border-white/10 text-textPrimary rounded-tl-sm'
@@ -81,9 +81,19 @@ const AIChatWidget = () => {
 
   return (
     <>
-      {/* Chat Panel */}
-      <div className={`fixed bottom-24 right-6 z-50 w-[360px] transition-all duration-300 ease-out ${open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-        <div className="glass rounded-2xl border border-white/10 shadow-2xl shadow-black/50 flex flex-col overflow-hidden" style={{ height: '520px' }}>
+      {/*
+        Chat Panel
+        Mobile:  spans most of screen width (inset-x-2), sits above mobile nav (bottom-[72px])
+        Desktop: fixed w-[360px] at right-6 bottom-24
+      */}
+      <div className={`fixed z-50 transition-all duration-300 ease-out
+        inset-x-2 bottom-[72px]
+        md:inset-auto md:bottom-24 md:right-6 md:w-[360px]
+        ${open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+        <div
+          className="glass rounded-2xl border border-white/10 shadow-2xl shadow-black/50 flex flex-col overflow-hidden"
+          style={{ height: 'min(520px, 80vh)' }}
+        >
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10 bg-gradient-to-r from-primary/10 to-secondary/10 flex-shrink-0">
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/30">
@@ -141,8 +151,8 @@ const AIChatWidget = () => {
                 onKeyDown={handleKey}
                 placeholder="Ask anything..."
                 rows={1}
-                className="flex-1 bg-transparent text-sm text-textPrimary placeholder-textSecondary resize-none outline-none max-h-24 leading-relaxed"
-                style={{ minHeight: '24px' }}
+                className="flex-1 bg-transparent text-textPrimary placeholder-textSecondary resize-none outline-none max-h-24 leading-relaxed"
+                style={{ minHeight: '24px', fontSize: '16px' }}
               />
               <button
                 onClick={() => sendMessage()}
@@ -157,10 +167,10 @@ const AIChatWidget = () => {
         </div>
       </div>
 
-      {/* Floating Button */}
+      {/* Floating Button — hidden on mobile (users tap bottom nav to open AI) */}
       <button
         onClick={() => setOpen(o => !o)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-tr from-primary to-secondary shadow-2xl shadow-primary/40 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${open ? 'rotate-12' : 'rotate-0'}`}
+        className={`hidden md:flex fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-tr from-primary to-secondary shadow-2xl shadow-primary/40 items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${open ? 'rotate-12' : 'rotate-0'}`}
         title="Ask Synora AI"
       >
         {open

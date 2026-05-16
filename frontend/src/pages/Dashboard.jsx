@@ -52,12 +52,12 @@ const Dashboard = () => {
   const upcomingDeadlines = tasks.filter(t => !t.completed).sort((a, b) => new Date(a.deadline) - new Date(b.deadline)).slice(0, 4);
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <header className="flex justify-between items-end flex-wrap gap-4">
+    <div className="space-y-6 md:space-y-8 animate-fade-in">
+      <header className="flex justify-between items-start md:items-end flex-wrap gap-3">
         <div>
-          <p className="text-sm text-textSecondary mb-1">{format(now, 'EEEE, MMMM do, yyyy')}</p>
-          <h1 className="text-3xl font-bold">Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0]}</span>!</h1>
-          <p className="text-textSecondary mt-1 text-sm italic">"{quote}"</p>
+          <p className="text-xs md:text-sm text-textSecondary mb-1">{format(now, 'EEEE, MMMM do, yyyy')}</p>
+          <h1 className="text-2xl md:text-3xl font-bold">Welcome back, <span className="text-gradient">{user?.name?.split(' ')[0]}</span>!</h1>
+          <p className="text-textSecondary mt-1 text-sm italic hidden sm:block">"{quote}"</p>
         </div>
         <Link to="/tasks" className="btn-primary flex items-center gap-2 text-sm shrink-0"><span>+</span> Add Task</Link>
       </header>
@@ -82,29 +82,29 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
         <div className="glass-card flex flex-col gap-3">
           <div className="flex items-center gap-3"><div className="w-9 h-9 rounded-lg bg-success/15 text-success flex items-center justify-center"><CheckCircle className="w-5 h-5"/></div><span className="text-sm font-medium text-textSecondary">Task Progress</span></div>
-          <div className="text-3xl font-bold">{progress}%</div>
+          <div className="text-2xl md:text-3xl font-bold">{progress}%</div>
           <div className="w-full bg-white/5 rounded-full h-1.5"><div className="bg-success h-1.5 rounded-full transition-all duration-1000" style={{width:`${progress}%`}}/></div>
           <p className="text-xs text-textSecondary">{analytics?.completedTasks ?? 0} of {analytics?.totalTasks ?? 0} tasks completed</p>
         </div>
         <div className="glass-card flex flex-col gap-3">
           <div className="flex items-center gap-3"><div className={`w-9 h-9 rounded-lg flex items-center justify-center ${streak > 0 ? 'bg-orange-500/15 text-orange-400' : 'bg-white/5 text-textSecondary'}`}><Flame className="w-5 h-5"/></div><span className="text-sm font-medium text-textSecondary">Study Streak</span></div>
-          <div className="text-3xl font-bold">{streak > 0 ? `${streak} day${streak !== 1 ? 's' : ''}` : '—'}</div>
+          <div className="text-2xl md:text-3xl font-bold">{streak > 0 ? `${streak} day${streak !== 1 ? 's' : ''}` : '—'}</div>
           <p className="text-xs text-textSecondary">{streak >= 3 ? '🔥 You\'re on fire!' : streak > 0 ? 'Come back tomorrow!' : 'Complete a task to start'}</p>
         </div>
         <div className="glass-card flex flex-col gap-3">
           <div className="flex items-center gap-3"><div className="w-9 h-9 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center"><Clock className="w-5 h-5"/></div><span className="text-sm font-medium text-textSecondary">Focus Time</span></div>
-          <div className="text-3xl font-bold">{focusDisplay}</div>
+          <div className="text-2xl md:text-3xl font-bold">{focusDisplay}</div>
           <p className="text-xs text-textSecondary">{totalFocusTime > 0 ? 'Total time logged' : 'No sessions yet'}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8">
         <div className="lg:col-span-3 space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">What Should I Study Now?</h2>
+            <h2 className="text-lg md:text-xl font-bold">What Should I Study Now?</h2>
             <Link to="/tasks" className="flex items-center gap-1 text-sm text-primary hover:text-primaryHover">All tasks <ArrowRight className="w-3.5 h-3.5"/></Link>
           </div>
           {recommendations.length > 0 ? (
@@ -136,7 +136,7 @@ const Dashboard = () => {
         </div>
 
         <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-xl font-bold">Upcoming Deadlines</h2>
+          <h2 className="text-lg md:text-xl font-bold">Upcoming Deadlines</h2>
           <div className="glass-card overflow-hidden p-0">
             {upcomingDeadlines.length > 0 ? (
               <div className="divide-y divide-white/5">

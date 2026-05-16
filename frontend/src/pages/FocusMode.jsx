@@ -39,10 +39,10 @@ const FocusMode = () => {
   const glowColor = mode === 'focus' ? '#6366f140' : mode === 'short' ? '#22c55e40' : '#a855f740';
 
   return (
-    <div className="max-w-lg mx-auto text-center space-y-10 animate-fade-in pt-8">
+    <div className="max-w-lg mx-auto text-center space-y-7 md:space-y-10 animate-fade-in pt-4 md:pt-8">
       <div>
-        <h1 className="text-4xl font-bold mb-2"><span className="text-gradient">Focus Mode</span></h1>
-        <p className="text-textSecondary">Stay in the zone with the Pomodoro Technique.</p>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2"><span className="text-gradient">Focus Mode</span></h1>
+        <p className="text-textSecondary text-sm md:text-base">Stay in the zone with the Pomodoro Technique.</p>
       </div>
 
       <div className="flex justify-center gap-2 p-1.5 bg-surface/60 backdrop-blur rounded-2xl border border-white/10 w-fit mx-auto">
@@ -51,13 +51,14 @@ const FocusMode = () => {
         ))}
       </div>
 
+      {/* Timer — 240px on mobile, 280px on md+ */}
       <div className="relative flex items-center justify-center">
-        <svg width="280" height="280" className="-rotate-90">
+        <svg className="-rotate-90 w-[240px] h-[240px] md:w-[280px] md:h-[280px]" viewBox="0 0 280 280">
           <circle cx="140" cy="140" r={radius} fill="none" stroke="#1e1e1e" strokeWidth="10"/>
           <circle cx="140" cy="140" r={radius} fill="none" stroke={strokeColor} strokeWidth="10" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} style={{transition:'stroke-dashoffset 1s linear'}}/>
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-[56px] font-bold leading-none tracking-tighter font-mono">{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
+          <div className="text-[44px] md:text-[56px] font-bold leading-none tracking-tighter font-mono">{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</div>
           <div className={`text-sm font-semibold mt-2 ${cur.color}`}>{cur.label}</div>
         </div>
       </div>

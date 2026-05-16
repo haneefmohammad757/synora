@@ -5,19 +5,41 @@
 @tailwind utilities;
 
 @layer base {
-  body { @apply bg-background text-textPrimary font-sans antialiased; }
+  body {
+    @apply bg-background text-textPrimary font-sans antialiased;
+    overflow-x: hidden; /* prevent horizontal scroll on mobile */
+    -webkit-tap-highlight-color: transparent; /* remove tap flash on iOS */
+  }
+
+  /* Prevent iOS Safari from zooming on form inputs (keep ≥16px font) */
+  input, select, textarea {
+    font-size: max(16px, 1rem);
+  }
 }
 
 @layer utilities {
   .glass { @apply bg-surface/60 backdrop-blur-md border border-white/10; }
   .glass-card { @apply glass rounded-xl p-6 shadow-xl transition-all duration-300 hover:shadow-primary/10 hover:border-white/20; }
   .text-gradient { @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary; }
-  .btn-primary { @apply px-4 py-2 bg-primary hover:bg-primaryHover text-white rounded-lg font-medium transition-colors duration-200 shadow-lg shadow-primary/25 disabled:opacity-50; }
-  .btn-secondary { @apply px-4 py-2 bg-surface hover:bg-surfaceHover border border-white/10 text-white rounded-lg font-medium transition-colors duration-200; }
+  .btn-primary { @apply px-4 py-2 bg-primary hover:bg-primaryHover text-white rounded-lg font-medium transition-colors duration-200 shadow-lg shadow-primary/25 disabled:opacity-50; touch-action: manipulation; }
+  .btn-secondary { @apply px-4 py-2 bg-surface hover:bg-surfaceHover border border-white/10 text-white rounded-lg font-medium transition-colors duration-200; touch-action: manipulation; }
   .input-field { @apply w-full bg-surface/50 border border-white/10 rounded-lg px-4 py-2 text-textPrimary placeholder-textSecondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all; }
+  /* Mobile-safe bottom spacing for content above the sticky nav */
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 }
 
-::-webkit-scrollbar { width: 6px; }
+/* Buttons and anchors: faster tap response on touch devices */
+button, a {
+  touch-action: manipulation;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+/* Smooth momentum scrolling on iOS */
+.overflow-y-auto, .overflow-y-scroll {
+  -webkit-overflow-scrolling: touch;
+}

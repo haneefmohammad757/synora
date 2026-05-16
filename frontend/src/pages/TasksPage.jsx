@@ -45,10 +45,10 @@ const TasksPage = () => {
   if (loading) return <div className="flex items-center justify-center pt-32"><div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin"/></div>;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-wrap justify-between items-start gap-4">
+    <div className="space-y-5 md:space-y-6 animate-fade-in">
+      <div className="flex flex-wrap justify-between items-start gap-3">
         <div>
-          <h1 className="text-3xl font-bold">Smart Tasks</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">Smart Tasks</h1>
           <p className="text-textSecondary text-sm mt-1">Auto-sorted by AI Priority Score — most urgent first.</p>
         </div>
         <button onClick={() => setIsModalOpen(true)} className="btn-primary flex items-center gap-2"><Plus className="w-4 h-4"/> Add Task</button>
@@ -60,14 +60,14 @@ const TasksPage = () => {
         <span className="px-3 py-1 rounded-full text-sm bg-success/10 border border-success/20 text-success"><span className="font-bold">{tasks.filter(t=>t.completed).length}</span> completed</span>
       </div>
 
-      <div className="flex flex-wrap gap-3 items-center">
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="flex flex-col md:flex-row md:flex-wrap gap-3 items-start md:items-center">
+        <div className="relative w-full md:flex-1 md:min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-textSecondary"/>
-          <input type="text" placeholder="Search tasks..." className="input-field pl-10" value={search} onChange={e => setSearch(e.target.value)}/>
+          <input type="text" placeholder="Search tasks..." className="input-field pl-10" style={{fontSize:'16px'}} value={search} onChange={e => setSearch(e.target.value)}/>
         </div>
-        <div className="flex rounded-lg border border-white/10 overflow-hidden">
+        <div className="flex rounded-lg border border-white/10 overflow-hidden w-full md:w-auto">
           {['all','pending','completed'].map(f => (
-            <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 text-sm font-medium transition-colors capitalize ${filter===f?'bg-primary text-white':'bg-surface text-textSecondary hover:bg-white/5'}`}>{f}</button>
+            <button key={f} onClick={() => setFilter(f)} className={`flex-1 md:flex-none px-4 py-2 text-sm font-medium transition-colors capitalize ${filter===f?'bg-primary text-white':'bg-surface text-textSecondary hover:bg-white/5'}`}>{f}</button>
           ))}
         </div>
       </div>
@@ -94,7 +94,7 @@ const TasksPage = () => {
                   <span>Importance: {task.importance}/5</span>
                 </div>
               </div>
-              <button onClick={() => handleDelete(task._id)} className="p-2 text-textSecondary hover:text-danger hover:bg-danger/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all">
+              <button onClick={() => handleDelete(task._id)} className="p-2.5 text-textSecondary hover:text-danger hover:bg-danger/10 rounded-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all flex-shrink-0">
                 <Trash2 className="w-4 h-4"/>
               </button>
             </div>
@@ -110,28 +110,29 @@ const TasksPage = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
-          <div className="glass-card w-full max-w-md animate-slide-up shadow-2xl shadow-primary/10">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4 bg-background/80 backdrop-blur-sm">
+          <div className="glass-card w-full max-w-md md:max-w-md animate-slide-up shadow-2xl shadow-primary/10
+                          rounded-b-none md:rounded-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold">Add New Task</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-textSecondary hover:text-white text-2xl leading-none">&times;</button>
+              <button onClick={() => setIsModalOpen(false)} className="text-textSecondary hover:text-white text-2xl leading-none w-10 h-10 flex items-center justify-center">&times;</button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div><label className="block text-sm font-medium mb-1">Subject</label><input required type="text" className="input-field" value={formData.subject} onChange={e => setFormData({...formData,subject:e.target.value})} placeholder="e.g. Calculus"/></div>
-              <div><label className="block text-sm font-medium mb-1">Topic</label><input required type="text" className="input-field" value={formData.topic} onChange={e => setFormData({...formData,topic:e.target.value})} placeholder="e.g. Chapter 4 - Integrals"/></div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><label className="block text-sm font-medium mb-1">Deadline</label><input required type="date" className="input-field" value={formData.deadline} onChange={e => setFormData({...formData,deadline:e.target.value})}/></div>
+              <div><label className="block text-sm font-medium mb-1">Subject</label><input required type="text" className="input-field" style={{fontSize:'16px'}} value={formData.subject} onChange={e => setFormData({...formData,subject:e.target.value})} placeholder="e.g. Calculus"/></div>
+              <div><label className="block text-sm font-medium mb-1">Topic</label><input required type="text" className="input-field" style={{fontSize:'16px'}} value={formData.topic} onChange={e => setFormData({...formData,topic:e.target.value})} placeholder="e.g. Chapter 4 - Integrals"/></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div><label className="block text-sm font-medium mb-1">Deadline</label><input required type="date" className="input-field" style={{fontSize:'16px'}} value={formData.deadline} onChange={e => setFormData({...formData,deadline:e.target.value})}/></div>
                 <div><label className="block text-sm font-medium mb-1">Difficulty</label>
-                  <select className="input-field" value={formData.difficulty} onChange={e => setFormData({...formData,difficulty:e.target.value})}>
+                  <select className="input-field" style={{fontSize:'16px'}} value={formData.difficulty} onChange={e => setFormData({...formData,difficulty:e.target.value})}>
                     <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
                   </select>
                 </div>
-                <div><label className="block text-sm font-medium mb-1">Importance (1-5)</label><input required type="number" min="1" max="5" className="input-field" value={formData.importance} onChange={e => setFormData({...formData,importance:parseInt(e.target.value)})}/></div>
-                <div><label className="block text-sm font-medium mb-1">Est. Time (mins)</label><input required type="number" min="5" className="input-field" value={formData.estimatedTime} onChange={e => setFormData({...formData,estimatedTime:parseInt(e.target.value)})}/></div>
+                <div><label className="block text-sm font-medium mb-1">Importance (1-5)</label><input required type="number" min="1" max="5" className="input-field" style={{fontSize:'16px'}} value={formData.importance} onChange={e => setFormData({...formData,importance:parseInt(e.target.value)})}/></div>
+                <div><label className="block text-sm font-medium mb-1">Est. Time (mins)</label><input required type="number" min="5" className="input-field" style={{fontSize:'16px'}} value={formData.estimatedTime} onChange={e => setFormData({...formData,estimatedTime:parseInt(e.target.value)})}/></div>
               </div>
-              <div className="flex gap-3 justify-end pt-2">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-secondary">Cancel</button>
-                <button type="submit" className="btn-primary">Add Task</button>
+              <div className="flex gap-3 pt-2 pb-2">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-secondary flex-1 md:flex-none">Cancel</button>
+                <button type="submit" className="btn-primary flex-1 md:flex-none">Add Task</button>
               </div>
             </form>
           </div>

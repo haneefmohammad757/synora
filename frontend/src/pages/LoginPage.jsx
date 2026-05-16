@@ -16,15 +16,15 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center py-12 px-6">
-      <div className="mx-auto w-full max-w-md text-center mb-8">
-        <Link to="/" className="inline-flex items-center gap-2 mb-6">
+    <div className="min-h-screen bg-background flex flex-col justify-center py-8 md:py-12 px-5 md:px-6">
+      <div className="mx-auto w-full max-w-md text-center mb-6 md:mb-8">
+        <Link to="/" className="inline-flex items-center gap-2 mb-5 md:mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/25">
             <Zap className="w-6 h-6 text-white" />
           </div>
           <span className="text-2xl font-bold tracking-tight">Synora</span>
         </Link>
-        <h2 className="text-3xl font-bold">Sign in to your account</h2>
+        <h2 className="text-2xl md:text-3xl font-bold">Sign in to your account</h2>
       </div>
       <div className="mx-auto w-full max-w-md animate-slide-up">
         <div className="glass-card">
@@ -32,11 +32,11 @@ const LoginPage = () => {
             {error && <div className="p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm text-center">{error}</div>}
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
-              <input type="email" required className="input-field" value={email} onChange={e => { setEmail(e.target.value); setError(null); }} placeholder="you@example.com" />
+              <input type="email" required className="input-field" style={{fontSize:'16px'}} value={email} onChange={e => { setEmail(e.target.value); setError(null); }} placeholder="you@example.com" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Password</label>
-              <input type="password" required className="input-field" value={password} onChange={e => { setPassword(e.target.value); setError(null); }} placeholder="••••••••" />
+              <input type="password" required className="input-field" style={{fontSize:'16px'}} value={password} onChange={e => { setPassword(e.target.value); setError(null); }} placeholder="••••••••" />
             </div>
             <button type="submit" className="w-full btn-primary py-3">Sign in</button>
           </form>
