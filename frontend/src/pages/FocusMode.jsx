@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 import { Play, Pause, RotateCcw, Coffee, Brain, CheckCircle } from 'lucide-react';
 
 const MODES = {
@@ -9,6 +10,7 @@ const MODES = {
 };
 
 const FocusMode = () => {
+  const { isGuest } = useAuth();
   const [mode, setMode] = useState('focus');
   const [timeLeft, setTimeLeft] = useState(MODES.focus.duration);
   const [isActive, setIsActive] = useState(false);
@@ -28,7 +30,11 @@ const FocusMode = () => {
     } else if (timeLeft === 0) {
       clearInterval(intervalRef.current);
       setIsActive(false);
-      if (mode === 'focus') { api.post('/api/focus', { duration: 25 }).catch(console.error); setSessionsToday(s => s + 1); }
+      if (mode === 'focus') {
+        setSessionsToday(s => s + 1);
+        // Skip API call for guest users — timer still works fully
+        if (!isGuest) api.post('/api/focus', { duration: 25 }).catch(console.error);
+      }
     }
     return () => clearInterval(intervalRef.current);
   }, [isActive, timeLeft, mode]);

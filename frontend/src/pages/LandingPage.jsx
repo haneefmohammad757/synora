@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Zap, Calendar, Clock, CheckCircle, BarChart2, Target, ArrowRight, Star, Loader2 } from 'lucide-react';
+import { Zap, Calendar, Clock, CheckCircle, BarChart2, Target, ArrowRight, Star } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const features = [
@@ -19,21 +18,13 @@ const testimonials = [
 ];
 
 function LandingPage() {
-  const { loginDemo } = useAuth();
+  const { enterGuestMode } = useAuth();
   const navigate = useNavigate();
-  const [demoLoading, setDemoLoading] = useState(false);
-  const [demoError, setDemoError] = useState('');
 
-  const handleDemo = async () => {
-    setDemoLoading(true);
-    setDemoError('');
-    const ok = await loginDemo();
-    if (ok) {
-      navigate('/dashboard');
-    } else {
-      setDemoError('Demo login failed. Please try again.');
-      setDemoLoading(false);
-    }
+  /** Instant — no API call, no spinner, no error state */
+  const handleDemo = () => {
+    enterGuestMode();
+    navigate('/dashboard');
   };
 
   return (
@@ -98,21 +89,14 @@ function LandingPage() {
             Start for Free <ArrowRight className="w-4 h-4" />
           </Link>
 
-          {/* Inline demo link */}
+          {/* Inline demo link — instant, no API call */}
           <button
             onClick={handleDemo}
-            disabled={demoLoading}
             className="flex items-center gap-1.5 text-sm text-textSecondary hover:text-primary
-                       transition-colors duration-200 disabled:opacity-50 group"
+                       transition-colors duration-200 group"
           >
-            {demoLoading ? (
-              <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Signing in to demo...</>
-            ) : (
-              <>Try Live Demo <span className="group-hover:translate-x-0.5 transition-transform duration-200 inline-block">→</span></>
-            )}
+            Try Live Demo <span className="group-hover:translate-x-0.5 transition-transform duration-200 inline-block">→</span>
           </button>
-
-          {demoError && <p className="text-xs text-danger">{demoError}</p>}
           <p className="text-xs text-textSecondary -mt-2">No credit card required.</p>
         </div>
       </div>

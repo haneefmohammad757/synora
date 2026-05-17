@@ -1,24 +1,33 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 import { Plus, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { getGuestNotes, addGuestNote, deleteGuestNote } from '../utils/guestData';
 
 const NotesPage = () => {
+  const { isGuest } = useAuth();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ title: '', content: '' });
 
-  useEffect(() => { fetchNotes(); }, []);
+  useEffect(() => { fetchNotes(); }, [isGuest]);
+
   const fetchNotes = async () => {
+    if (isGuest) { setNotes(getGuestNotes()); setLoading(false); return; }
     try { const res = await api.get('/api/notes'); setNotes(res.data.data); }
     catch (e) { console.error(e); } finally { setLoading(false); }
   };
+
   const handleDelete = async (id) => {
+    if (isGuest) { setNotes(deleteGuestNote(id)); return; }
     try { await api.delete(`/api/notes/${id}`); fetchNotes(); } catch (e) { console.error(e); }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isGuest) { setNotes(addGuestNote(formData)); setIsModalOpen(false); setFormData({title:'',content:''}); return; }
     try { await api.post('/api/notes', formData); setIsModalOpen(false); setFormData({title:'',content:''}); fetchNotes(); }
     catch (e) { console.error(e); }
   };

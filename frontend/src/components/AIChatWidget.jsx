@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Sparkles, X, Send, Loader2, RotateCcw, ChevronDown } from 'lucide-react';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 const SUGGESTIONS = [
   "Explain the Pythagorean theorem",
@@ -30,6 +31,7 @@ const MessageBubble = ({ msg }) => (
 );
 
 const AIChatWidget = () => {
+  const { isGuest } = useAuth();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'assistant', content: "Hi! I'm Synora AI 🎓\n\nI can help you with study questions, explain concepts, or guide your learning. What would you like to explore?" }
@@ -62,10 +64,12 @@ const AIChatWidget = () => {
       });
       setMessages(prev => [...prev, { role: 'assistant', content: res.data.data.reply }]);
     } catch (err) {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: err.response?.data?.message || "Sorry, I'm having trouble connecting. Please try again."
-      }]);
+      // For guest users, show a helpful fallback instead of an auth error
+      const isAuthError = err.response?.status === 401 || err.response?.status === 403;
+      const fallback = isGuest && isAuthError
+        ? "I'm Synora AI! In demo mode I have limited connectivity — create a free account to unlock full AI assistance. In the meantime, try the task manager or focus timer above!"
+        : (err.response?.data?.message || "Sorry, I'm having trouble connecting. Please try again.");
+      setMessages(prev => [...prev, { role: 'assistant', content: fallback }]);
     } finally {
       setLoading(false);
     }

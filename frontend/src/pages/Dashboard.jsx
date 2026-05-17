@@ -4,11 +4,16 @@ import { useAuth } from '../context/AuthContext';
 import { Calendar, CheckCircle, Clock, Zap, Flame, ArrowRight, AlertTriangle, Target } from 'lucide-react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import {
+  getGuestTasks,
+  GUEST_ANALYTICS,
+  GUEST_RECOMMENDATIONS,
+} from '../utils/guestData';
 
 const quotes = ["The secret of getting ahead is getting started.", "Don't watch the clock; do what it does. Keep going.", "Push yourself, because no one else is going to do it for you.", "Great things never come from comfort zones.", "Success doesn't just find you. You have to go out and get it.", "Dream it. Wish it. Do it.", "It always seems impossible until it's done."];
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, isGuest } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [aiMessage, setAiMessage] = useState('');
@@ -17,6 +22,17 @@ const Dashboard = () => {
   const quote = quotes[new Date().getDay() % quotes.length];
 
   useEffect(() => {
+    if (isGuest) {
+      // ── Guest: use local seed data, no API ──
+      setTasks(getGuestTasks());
+      setRecommendations(GUEST_RECOMMENDATIONS.recommendations);
+      setAiMessage(GUEST_RECOMMENDATIONS.message);
+      setAnalytics(GUEST_ANALYTICS);
+      setLoading(false);
+      return;
+    }
+
+    // ── Real user: fetch from API ──
     const fetch = async () => {
       try {
         const [t, r, a] = await Promise.all([
@@ -32,7 +48,7 @@ const Dashboard = () => {
       finally { setLoading(false); }
     };
     fetch();
-  }, []);
+  }, [isGuest]);
 
   if (loading) return (
     <div className="flex items-center justify-center h-full pt-32">

@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 import { Plus, Check, Trash2, Zap, Search, Calendar } from 'lucide-react';
 import { format, isPast } from 'date-fns';
+import { getGuestTasks, addGuestTask, toggleGuestTask, deleteGuestTask } from '../utils/guestData';
 
 const defaultForm = { subject: '', topic: '', deadline: '', difficulty: 'medium', importance: 3, estimatedTime: 30 };
 
 const TasksPage = () => {
+  const { isGuest } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,26 +16,27 @@ const TasksPage = () => {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
 
-  useEffect(() => { fetchTasks(); }, []);
+  useEffect(() => { fetchTasks(); }, [isGuest]);
 
   const fetchTasks = async () => {
-    try {
-      const res = await api.get('/api/tasks');
-      setTasks(res.data.data);
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
+    if (isGuest) { setTasks(getGuestTasks()); setLoading(false); return; }
+    try { const res = await api.get('/api/tasks'); setTasks(res.data.data); }
+    catch (e) { console.error(e); } finally { setLoading(false); }
   };
 
   const handleToggleComplete = async (id, current) => {
+    if (isGuest) { setTasks(toggleGuestTask(id)); return; }
     try { await api.put(`/api/tasks/${id}`, { completed: !current }); fetchTasks(); } catch (e) { console.error(e); }
   };
 
   const handleDelete = async (id) => {
+    if (isGuest) { setTasks(deleteGuestTask(id)); return; }
     try { await api.delete(`/api/tasks/${id}`); fetchTasks(); } catch (e) { console.error(e); }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isGuest) { setTasks(addGuestTask(formData)); setIsModalOpen(false); setFormData(defaultForm); return; }
     try { await api.post('/api/tasks', formData); setIsModalOpen(false); setFormData(defaultForm); fetchTasks(); } catch (e) { console.error(e); }
   };
 
@@ -111,8 +115,7 @@ const TasksPage = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4 bg-background/80 backdrop-blur-sm">
-          <div className="glass-card w-full max-w-md md:max-w-md animate-slide-up shadow-2xl shadow-primary/10
-                          rounded-b-none md:rounded-2xl max-h-[90vh] overflow-y-auto">
+          <div className="glass-card w-full max-w-md animate-slide-up shadow-2xl shadow-primary/10 rounded-b-none md:rounded-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold">Add New Task</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-textSecondary hover:text-white text-2xl leading-none w-10 h-10 flex items-center justify-center">&times;</button>

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 import { Target, CheckCircle, Clock, Zap, Flame, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { GUEST_ANALYTICS } from '../utils/guestData';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) return (
@@ -14,12 +16,14 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const AnalyticsPage = () => {
+  const { isGuest } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isGuest) { setData(GUEST_ANALYTICS); setLoading(false); return; }
     api.get('/api/analytics').then(res => setData(res.data.data)).catch(console.error).finally(() => setLoading(false));
-  }, []);
+  }, [isGuest]);
 
   if (loading) return <div className="flex items-center justify-center pt-32"><div className="w-10 h-10 rounded-full border-2 border-primary border-t-transparent animate-spin"/></div>;
   if (!data) return <div className="text-textSecondary">Failed to load analytics.</div>;
@@ -37,7 +41,7 @@ const AnalyticsPage = () => {
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold mb-1">Analytics <span className="text-gradient">& Insights</span></h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-1">Analytics <span className="text-gradient">&amp; Insights</span></h1>
         <p className="text-textSecondary text-sm md:text-base">Your real-time productivity data — tracked live from your activity.</p>
       </div>
 

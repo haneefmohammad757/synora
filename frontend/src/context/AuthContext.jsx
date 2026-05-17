@@ -1,7 +1,15 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import api from '../utils/api';
+import { clearGuestData } from '../utils/guestData';
 
 const AuthContext = createContext();
+
+// Synthetic user object for guest sessions — no real account
+const GUEST_USER = {
+  name: 'Guest',
+  email: 'guest@synora.demo',
+  isGuest: true,
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -10,6 +18,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkLoggedIn = async () => {
+      // ── Restore guest session from localStorage (no API needed) ──
+      if (localStorage.getItem('guest_mode') === 'true') {
+        setUser(GUEST_USER);
+        setLoading(false);
+        return;
+      }
+
+      // ── Restore real JWT session ──
       const token = localStorage.getItem('token');
       if (token) {
         try {
@@ -51,14 +67,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const loginDemo = async () => {
-    return login('demo@synora.ai', 'Synora123');
+  /** Instant guest session — no API call, no credentials needed */
+  const enterGuestMode = () => {
+    localStorage.setItem('guest_mode', 'true');
+    setUser(GUEST_USER);
   };
 
-  const logout = () => { localStorage.removeItem('token'); setUser(null); };
+  const logout = () => {
+    localStorage.removeItem('token');
+    clearGuestData(); // wipes guest_mode + all synora_guest_* keys
+    setUser(null);
+  };
+
+  const isGuest = Boolean(user?.isGuest);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, login, signup, logout, loginDemo, setError }}>
+    <AuthContext.Provider
+      value={{ user, loading, error, login, signup, logout, enterGuestMode, isGuest, setError }}
+    >
       {children}
     </AuthContext.Provider>
   );
